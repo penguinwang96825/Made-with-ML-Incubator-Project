@@ -130,8 +130,8 @@ def tweets_dateframe(search, output_file, year="2020"):
 for year in tqdm(["2017", "2018", "2019", "2020"]):
     tweets_dateframe(search="FXstreetNews", output_file="forex.csv", year=year)
 
-df = pd.read_csv("forex.csv", 
-                 usecols=["date", "time", "username", "tweet", "hashtags", "likes_count", "replies_count", "retweets_count"])
+cols = ["date", "time", "username", "tweet", "hashtags", "likes_count", "replies_count", "retweets_count"]
+df = pd.read_csv("forex.csv", usecols=cols)
 print("# of tweets: {}".format(df.shape[0]))
 df.sort_values(by="date", ascending=True, inplace=True)
 df.reset_index(drop=True, inplace=True)
