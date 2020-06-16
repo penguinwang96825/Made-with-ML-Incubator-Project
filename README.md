@@ -4,7 +4,7 @@ In this project, we focus on the researches applying natural language processing
 ## Introduction
 Sentiment analysis can use natural language processing, artificial intelligence, text analysis and computational linguistics to identify the attitude of several topics. In this project, we focus on the researches applying natural language processing (NLP) technologies in the finance domain. First, we will dig into some people who have huge impact on financial market. Second, we will predict foreign exchange rates by making use of the trending topics from Twitter, using a machine learning based model.
 
-## Colloct Data
+## Collect Data
 
 ### Import Packages
 ```python
@@ -27,6 +27,27 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm.notebook import tqdm
 ```
+
+### Target Tweets
+Forex trading is fast, very fast, and Twitter fits like a glove to any forex trader’s hand. There’s lots of quick and useful information coming in the form of tweets and sometimes too much information. We got a list of top forex twitter accounts from [here](https://www.forexcrunch.com/60-top-forex-twitter-accounts/), each one coming with different characteristics, to suit traders interested in different aspects of trading (technical, fundamental, educational,, sentiment, a mix of some or all, etc.). We Crawled 63 forex twitter accounts listed on the website and store it into `trader_account` list for future use.
+
+```python
+import requests
+from bs4 import BeautifulSoup
+
+headers = {'user-agent': 
+           'Mozilla/5.0 (Macintosh Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'}
+url = "https://www.forexcrunch.com/60-top-forex-twitter-accounts/"
+res = requests.get(url, headers=headers).text
+soup = BeautifulSoup(res, "html.parser")
+trader_account = []
+table = soup.find(name="ol")
+for account in table.find_all(name="li"):
+    name = account.find(name="a").text
+    name = name.replace("@", "")
+    trader_account.append(name)
+```
+
 
 ### Twint Variable Description
 Here’s the full list of configuring options:
