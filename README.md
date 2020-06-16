@@ -1,7 +1,12 @@
 # Made_with_ML_Incubator_Project
 In this project, we focus on the researches applying natural language processing (NLP) technologies in the finance domain. 
 
-## Import Packages
+## Introduction
+Sentiment analysis can use natural language processing, artificial intelligence, text analysis and computational linguistics to identify the attitude of several topics. In this project, we focus on the researches applying natural language processing (NLP) technologies in the finance domain. First, we will dig into some people who have huge impact on financial market. Second, we will predict foreign exchange rates by making use of the trending topics from Twitter, using a machine learning based model.
+
+## Colloct Data
+
+### Import Packages
 ```python
 # An advanced Twitter scraping & OSINT tool written in Python that doesn't use Twitter's API.
 import twint
@@ -23,7 +28,8 @@ import seaborn as sns
 from tqdm.notebook import tqdm
 ```
 
-## Twint
+### Twint Variable Description
+Here’s the full list of configuring options:
 
 |Variable             |Type       |Description|
 |---|---|---|
@@ -83,3 +89,51 @@ from tqdm.notebook import tqdm
 |Retweets             |(bool)   - |Display replies to a subject.|
 |Hide_output          |(bool)   - |Hide output.|
 |Get_replies          |(bool)   - |All replies to the tweet.|
+
+### Crawl Tweets
+[Twint](https://github.com/twintproject/twint) is an advanced Twitter scraping tool written in Python that allows for scraping Tweets from Twitter profiles without using Twitter's API. We utilise twint to get tweets, and store the results into a pandas dataframe. We created a simple function that you can see in the actual project that integrate Pandas with Twint API for this part. Next, there are many features we have from the query we just did. There’s a lot of different things to do with this data, but for this project we’ll only use some of them, namely `date`, `time`, `username`, `tweet`, `hashtags`, `likes_count`, `replies_count`, and `retweets_count`.
+
+```python
+class HiddenPrints:
+    def __enter__(self):
+        self._original_stdout = sys.stdout
+        sys.stdout = open(os.devnull, 'w')
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stdout.close()
+        sys.stdout = self._original_stdout
+
+# 63 Top Forex Twitter Accounts: 
+# https://www.forexcrunch.com/60-top-forex-twitter-accounts/
+# https://towardsdatascience.com/analyzing-tweets-with-nlp-in-minutes-with-spark-optimus-and-twint-a0c96084995f
+def tweets_dateframe(search, output_file, year="2020"):
+    # Configure
+    c = twint.Config()
+    c.Search = search
+    c.Year = year
+    c.Lang = "en"
+    c.Pandas = True
+    c.Store_csv = True
+    c.Format = "Username: {username} |  Tweet: {tweet}"
+    c.Output = output_file
+    c.Hide_output = True
+    # c.Limit = 10000
+    # c.User_full = True
+    # c.Since = since
+    # c.Until = until
+
+    # Run
+    with HiddenPrints():
+        print(twint.run.Search(c))
+    
+    return "Done scraping tweets!"
+
+for year in tqdm(["2017", "2018", "2019", "2020"]):
+    tweets_dateframe(search="FXstreetNews", output_file="forex.csv", year=year)
+
+df = pd.read_csv("forex.csv", 
+                 usecols=["date", "time", "username", "tweet", "hashtags", "likes_count", "replies_count", "retweets_count"])
+print("# of tweets: {}".format(df.shape[0]))
+df.sort_values(by="date", ascending=True, inplace=True)
+df.reset_index(drop=True, inplace=True)
+df.head()
+```
