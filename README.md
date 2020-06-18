@@ -54,7 +54,7 @@ Here’s the full list of configuring options:
 
 <details>
 <summary>BiLSTM Model Architecture</summary>
-<pre><code>
+<pre>
 |Variable             |Type       |Description|
 |---|---|---|
 |Username             |(string) - |Twitter user's username|
@@ -113,7 +113,7 @@ Here’s the full list of configuring options:
 |Retweets             |(bool)   - |Display replies to a subject.|
 |Hide_output          |(bool)   - |Hide output.|
 |Get_replies          |(bool)   - |All replies to the tweet.|
-</code></pre>
+</pre>
 </details>
 
 ### Crawl Tweets
