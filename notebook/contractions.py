@@ -1,5 +1,5 @@
 # Dictionary of English Contractions
-contractions_dict = dict("ain't": "are not","'s":" is","aren't": "are not",
+contractions_dict = {"ain't": "are not","'s":" is","aren't": "are not",
                      "can't": "cannot","can't've": "cannot have",
                      "'cause": "because","could've": "could have","couldn't": "could not",
                      "couldn't've": "could not have", "didn't": "did not","doesn't": "does not",
@@ -35,4 +35,4 @@ contractions_dict = dict("ain't": "are not","'s":" is","aren't": "are not",
                      "y'all'd've": "you all would have","y'all're": "you all are",
                      "y'all've": "you all have", "you'd": "you would","you'd've": "you would have",
                      "you'll": "you will","you'll've": "you will have", "you're": "you are",
-                     "you've": "you have")
+                     "you've": "you have"}

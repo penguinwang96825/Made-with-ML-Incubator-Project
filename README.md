@@ -52,6 +52,9 @@ for account in table.find_all(name="li"):
 ### Twint Variable Description
 Here’s the full list of configuring options:
 
+<details>
+<summary>BiLSTM Model Architecture</summary>
+<pre><code>
 |Variable             |Type       |Description|
 |---|---|---|
 |Username             |(string) - |Twitter user's username|
@@ -110,6 +113,8 @@ Here’s the full list of configuring options:
 |Retweets             |(bool)   - |Display replies to a subject.|
 |Hide_output          |(bool)   - |Hide output.|
 |Get_replies          |(bool)   - |All replies to the tweet.|
+</code></pre>
+</details>
 
 ### Crawl Tweets
 [Twint](https://github.com/twintproject/twint) is an advanced Twitter scraping tool written in Python that allows for scraping Tweets from Twitter profiles without using Twitter's API. We utilise twint to get tweets, and store the results into a pandas dataframe. We created a simple function that you can see in the actual project that integrate Pandas with Twint API for this part. Next, there are many features we have from the query we just did. There’s a lot of different things to do with this data, but for this project we’ll only use some of them, namely `date`, `time`, `username`, `tweet`, `hashtags`, `likes_count`, `replies_count`, and `retweets_count`.
