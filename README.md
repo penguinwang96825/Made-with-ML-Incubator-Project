@@ -56,7 +56,6 @@ Here’s the full list of configuring options:
 <summary>configuring options list</summary>
 <pre>
 |Variable             |Type       |Description|
-|---|---|---|
 |Username             |(string) - |Twitter user's username|
 |User_id              |(string) - |Twitter user's user_id|
 |Search               |(string) - |Search terms|
@@ -131,7 +130,7 @@ class HiddenPrints:
 # 63 Top Forex Twitter Accounts: 
 # https://www.forexcrunch.com/60-top-forex-twitter-accounts/
 # https://towardsdatascience.com/analyzing-tweets-with-nlp-in-minutes-with-spark-optimus-and-twint-a0c96084995f
-def tweets_dateframe(search, output_file, year="2020"):
+def tweets_to_dateframe_by_year(search, output_file, year="2020"):
     # Configure
     c = twint.Config()
     c.Search = search
@@ -142,10 +141,6 @@ def tweets_dateframe(search, output_file, year="2020"):
     c.Format = "Username: {username} |  Tweet: {tweet}"
     c.Output = output_file
     c.Hide_output = True
-    # c.Limit = 10000
-    # c.User_full = True
-    # c.Since = since
-    # c.Until = until
 
     # Run
     with HiddenPrints():
@@ -153,8 +148,30 @@ def tweets_dateframe(search, output_file, year="2020"):
     
     return "Done scraping tweets!"
 
+def tweets_to_dateframe_by_interval(search, output_file, since, until):
+    # Configure
+    c = twint.Config()
+    c.Search = search
+    c.Since = since
+    c.Until = until
+    c.Lang = "en"
+    c.Pandas = True
+    c.Store_csv = True
+    c.Format = "Username: {username} |  Tweet: {tweet}"
+    c.Output = output_file
+    c.Hide_output = True
+
+    # Run
+    with HiddenPrints():
+        print(twint.run.Search(c))
+    
+    return "Done scraping tweets!"
+```
+
+Test on the function.
+```python
 for year in tqdm(["2017", "2018", "2019", "2020"]):
-    tweets_dateframe(search="FXstreetNews", output_file="forex.csv", year=year)
+    tweets_to_dateframe_by_year(search="FXstreetNews", output_file="forex.csv", year=year)
 
 cols = ["date", "time", "username", "tweet", "hashtags", "likes_count", "replies_count", "retweets_count"]
 df = pd.read_csv("forex.csv", usecols=cols)
@@ -163,3 +180,10 @@ df.sort_values(by="date", ascending=True, inplace=True)
 df.reset_index(drop=True, inplace=True)
 df.head()
 ```
+
+||date    |time    |username    |tweet   |replies_count   |retweets_count  |likes_count |hashtags|
+|0   |2015-01-02  |22:37:53    |seekinwealth|    ForexLive: Cable continues lower, nears 1.5400...|   |0   |0   |0   |['#forex']|
+|1   |2015-01-02  |23:58:43    |forexcommentary| Technical analysis: GBP/USD taking it on the c...|   |0   |1   |1   |['#forex']|
+|2   |2015-01-02  |23:57:17    |cdethleffsen|    Trends in US Manufacturing\n http://bit.ly/1Ai...|   |0   |0   |1   |[]|
+|3   |2015-01-02  |23:55:36    |forexnow|    Technical analysis: GBP/USD taking it on the c...|   |0   |0   |1   |[]|
+|4   |2015-01-02  |23:51:07    |forexlive|   USD/JPY quickly gives up gains, slides back to...|   |0   |0   |1   |[]|
