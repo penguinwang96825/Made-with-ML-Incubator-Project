@@ -182,6 +182,7 @@ df.head()
 ```
 
 ||date    |time    |username    |tweet   |replies_count   |retweets_count  |likes_count |hashtags|
+|---|---|---|---|---|---|---|---|---|
 |0   |2015-01-02  |22:37:53    |seekinwealth|    ForexLive: Cable continues lower, nears 1.5400...|   |0   |0   |0   |['#forex']|
 |1   |2015-01-02  |23:58:43    |forexcommentary| Technical analysis: GBP/USD taking it on the c...|   |0   |1   |1   |['#forex']|
 |2   |2015-01-02  |23:57:17    |cdethleffsen|    Trends in US Manufacturing\n http://bit.ly/1Ai...|   |0   |0   |1   |[]|
