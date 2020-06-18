@@ -53,7 +53,7 @@ for account in table.find_all(name="li"):
 Here’s the full list of configuring options:
 
 <details>
-<summary>BiLSTM Model Architecture</summary>
+<summary>configuring options list</summary>
 <pre>
 |Variable             |Type       |Description|
 |---|---|---|
