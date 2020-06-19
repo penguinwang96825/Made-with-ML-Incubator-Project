@@ -1,5 +1,5 @@
 # Made with ML Incubator Project
-In this project, we focus on the researches applying natural language processing (NLP) technologies in the finance domain. 
+In this project, we focus on the researches applying natural language processing (NLP) technologies in the finance domain. We scrape tweets for forex traders then apply sentiment analysis to generate investment insight.
 
 ## Introduction
 Sentiment analysis can use natural language processing, artificial intelligence, text analysis and computational linguistics to identify the attitude of several topics. In this project, we focus on the researches applying natural language processing (NLP) technologies in the finance domain. First, we will dig into some people who have huge impact on financial market. Second, we will predict foreign exchange rates by making use of the trending topics from Twitter, using a machine learning based model.
