@@ -6,8 +6,8 @@ from wordcloud import WordCloud,STOPWORDS
 import matplotlib.pyplot as plt
 import joblib
 
-st.title("Sentiment Analysis of Tweets about the Forex")
-st.sidebar.title("Sentiment Analysis of Tweets about Forex")
+st.title("Analysis of Tweets about Forex")
+st.sidebar.title("Analysis of Tweets about Forex")
 
 st.markdown("This application is a Streamlit dashboard to analyze Forex")
 
