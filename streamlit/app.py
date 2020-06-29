@@ -28,7 +28,7 @@ st.markdown(data.query("username == @random_tweet")[["tweet"]].sample(n=1).iat[0
 
 st.sidebar.header("Word Cloud")
 word_username = st.sidebar.radio('Display word cloud for what username?', ('federalreserve', 'economics', 'ecb', 'ftfinancenews'))
-if not st.sidebar.checkbox("hide", True, key='3'):
+if not st.sidebar.checkbox("hide", False, key='3'):
     st.subheader('Word cloud for "%s" username' % (word_username))
     df = data[data['username']==word_username]
     words = ' '.join(df['tweet'])
