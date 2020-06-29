@@ -22,11 +22,11 @@ def load_data():
 data = load_data()
 
 st.sidebar.subheader("Show random tweet")
-random_tweet = st.sidebar.radio('username', ('federalreserve', 'economics', 'ecb', 'ftfinancenews', 'XHNews', 'YahooFinance'))
+random_tweet = st.sidebar.radio('username', ('federalreserve', 'economics', 'ecb', 'ftfinancenews'))
 st.markdown(data.query("username == @random_tweet")[["tweet"]].sample(n=1).iat[0, 0])
 
 st.sidebar.header("Word Cloud")
-word_username = st.sidebar.radio('Display word cloud for what username?', ('federalreserve', 'economics', 'ecb', 'ftfinancenews', 'XHNews', 'YahooFinance' ))
+word_username = st.sidebar.radio('Display word cloud for what username?', ('federalreserve', 'economics', 'ecb', 'ftfinancenews'))
 if not st.sidebar.checkbox("Close", True, key='3'):
     st.subheader('Word cloud for %s username' % (word_username))
     df = data[data['username']==word_username]
