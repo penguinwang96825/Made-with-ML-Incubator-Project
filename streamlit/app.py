@@ -21,3 +21,10 @@ def load_data():
 
 data = load_data()
 
+st.sidebar.subheader("Show random tweet")
+random_tweet = st.sidebar.radio('username', ('pafxss', 'federalreserve', 'economics'))
+st.sidebar.markdown(data.query("username == @random_tweet")[["tweet"]].sample(n=1).iat[0, 0])
+
+st.sidebar.button("Show tweets")
+st.markdown(data.query(("likes_count>=1000")))
+
