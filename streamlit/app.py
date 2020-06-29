@@ -2,9 +2,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from wordcloud import WordCloud,STOPWORDS
 import matplotlib.pyplot as plt
 import joblib
+from wordcloud import WordCloud
+from wordcloud import STOPWORDS
 
 st.title("Analysis of Tweets about Finance, Politics and Forex")
 st.sidebar.title("Analysis of Tweets ")
