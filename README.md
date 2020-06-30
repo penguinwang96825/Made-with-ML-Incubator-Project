@@ -27,7 +27,7 @@ The overview of our model is displayed above. The model can be generally devided
 
 In step 1, we conduct zero-shot learning on this paragraph to select the most important tweets on a daily basis. Tweets are then ranked by latent embedding approach, which is a common approach to zero shot learning in the computer vision setting. In the text domain, we have the advantage that we can trivially use a single model to embed both the data and the class names into the same space, eliminating the need for the data-hungry alignment step. We therefore decided to run some experiments with Sentence-BERT, a recent technique which fine-tunes the pooled BERT sequence representations for increased semantic richness, as a method for obtaining sequence and label embeddings. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/Zero-shot%20Learning.ipynb).
 
-In step 2, we conduct some text pre-processing work.
+In step 2, we conduct some text pre-processing work. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/Tweet%20Preprocessing.ipynb).
 ```python
 class TweetsPreprocessor:
     
@@ -82,4 +82,4 @@ In step 3, we combine top k daily tweets in order to aggregate semantic informat
 We choose the transformers from HuggingFace as implement and choose the bert-base-uncased version. We truncate the BERT input to 64 tokens and fine-tune the BERT parameters during training. We adopt the Adam optimizer with the initial learning rate of 2e-5. We apply the dropout regularization with the dropout probability of 0.25 to reduce over-fitting. The batch size is 32. The training epoch is 4. The weight of L2 regularization is 0.1. When splitting the dataset, we guarantee that the samples in train set are previous to samples in valid set and test set to avoid the possible information leakage. The forex prediction is conducted as a binary classification task (up or down). The evaluation metrics are F1 and Matthews Correlation Coefficient (MCC). MCC is often reported in stock movement forecast because it can deal with the data imbalance problem.
 
 ### Result
-![]()
+![result](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/result.png?raw=true)
