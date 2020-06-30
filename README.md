@@ -87,5 +87,8 @@ We choose the transformers from HuggingFace as implement and choose the bert-bas
 
 #### Confusion Matrix: 
 <p align="center">
-    <img src="https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/confusion%20matrix.png?raw=true" width="400" height="400">
+    <img src="https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/confusion%20matrix.png?raw=true" width="500" height="400">
 </p>
+
+#### Backtesting
+![backtesting](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/backtesting.png?raw=true)
