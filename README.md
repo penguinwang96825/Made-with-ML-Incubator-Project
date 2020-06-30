@@ -85,3 +85,4 @@ We choose the transformers from HuggingFace as implement and choose the bert-bas
 
 ### Result
 ![result](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/result.png?raw=true)
+![cm](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/confusion%20matrix.png?raw=true)
