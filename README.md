@@ -6,185 +6,80 @@ Sentiment analysis can use natural language processing, artificial intelligence,
 
 ## Collect Data
 
-### Import Packages
-```python
-# An advanced Twitter scraping & OSINT tool written in Python that doesn't use Twitter's API.
-import twint
+### Collect Tweets Data
+Forex trading is fast, very fast, and Twitter fits like a glove to any forex trader’s hand. There’s lots of quick and useful information coming in the form of tweets and sometimes too much information. We got a list of top forex twitter accounts from [here](https://www.forexcrunch.com/60-top-forex-twitter-accounts/), each one coming with different characteristics, to suit traders interested in different aspects of trading (technical, fundamental, educational,, sentiment, a mix of some or all, etc.). We Crawled 63 forex twitter accounts listed on the website and store it into `trader_account` list for future use. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/twint.ipynb).
 
-# Solve compatibility issues with notebooks and RunTime errors.
-import nest_asyncio
-import os
-import sys
-sys.path.append("twint/")
-nest_asyncio.apply()
-%load_ext autoreload
-%autoreload 2
-
-# Python preprocessing library.
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from tqdm.notebook import tqdm
-```
-
-### Target Tweets
-Forex trading is fast, very fast, and Twitter fits like a glove to any forex trader’s hand. There’s lots of quick and useful information coming in the form of tweets and sometimes too much information. We got a list of top forex twitter accounts from [here](https://www.forexcrunch.com/60-top-forex-twitter-accounts/), each one coming with different characteristics, to suit traders interested in different aspects of trading (technical, fundamental, educational,, sentiment, a mix of some or all, etc.). We Crawled 63 forex twitter accounts listed on the website and store it into `trader_account` list for future use.
-
-```python
-import requests
-from bs4 import BeautifulSoup
-
-headers = {'user-agent': 
-           'Mozilla/5.0 (Macintosh Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'}
-url = "https://www.forexcrunch.com/60-top-forex-twitter-accounts/"
-res = requests.get(url, headers=headers).text
-soup = BeautifulSoup(res, "html.parser")
-trader_account = []
-table = soup.find(name="ol")
-for account in table.find_all(name="li"):
-    name = account.find(name="a").text
-    name = name.replace("@", "")
-    trader_account.append(name)
-```
-
-
-### Twint Variable Description
-Here’s the full list of configuring options:
-
-<details>
-<summary>configuring options list</summary>
-<pre>
-|Variable             |Type       |Description|
-|Username             |(string) - |Twitter user's username|
-|User_id              |(string) - |Twitter user's user_id|
-|Search               |(string) - |Search terms|
-|Geo                  |(string) - |Geo coordinates (lat,lon,km/mi.)|
-|Location             |(bool)   - |Set to True to attempt to grab a Twitter user's location (slow).|
-|Near                 |(string) - |Near a certain City (Example: london)|
-|Lang                 |(string) - |Compatible language codes: https://github.com/twintproject/twint/wiki/Langauge-codes|
-|Output               |(string) - |Name of the output file.|
-|Elasticsearch        |(string) - |Elasticsearch instance|
-|Timedelta            |(int)    - |Time interval for every request (days)|
-|Year                 |(string) - |Filter Tweets before the specified year.|
-|Since                |(string) - |Filter Tweets sent since date (Example: 2017-12-27).|
-|Until                |(string) - |Filter Tweets sent until date (Example: 2017-12-27).|
-|Email                |(bool)   - |Set to True to show Tweets that _might_ contain emails.|
-|Phone                |(bool)   - |Set to True to show Tweets that _might_ contain phone numbers.|
-|Verified             |(bool)   - |Set to True to only show Tweets by _verified_ users|
-|Store_csv            |(bool)   - |Set to True to write as a csv file.|
-|Store_json           |(bool)   - |Set to True to write as a json file.|
-|Custom               |(dict)   - |Custom csv/json formatting (see below).|
-|Show_hashtags        |(bool)   - |Set to True to show hashtags in the terminal output.|
-|Limit                |(int)    - |Number of Tweets to pull (Increments of 20).|
-|Count                |(bool)   - |Count the total number of Tweets fetched.|
-|Stats                |(bool)   - |Set to True to show Tweet stats in the terminal output.|
-|Database             |(string) - |Store Tweets in a sqlite3 database. Set this to the DB. (Example: twitter.db)|
-|To                   |(string) - |Display Tweets tweeted _to_ the specified user.|
-|All                  |(string) - |Display all Tweets associated with the mentioned user.|
-|Debug                |(bool)   - |Store information in debug logs.|
-|Format               |(string) - |Custom terminal output formatting.|
-|Essid                |(string) - |Elasticsearch session ID.|
-|User_full            |(bool)   - |Set to True to display full user information. By default, only usernames are shown.|
-|Profile_full         |(bool)   - |Set to True to use a slow, but effective method to enumerate a user's Timeline.|
-|Store_object         |(bool)   - |Store tweets/user infos/usernames in JSON objects.|
-|Store_pandas         |(bool)   - |Save Tweets in a DataFrame (Pandas) file.|
-|Pandas_type          |(string) - |Specify HDF5 or Pickle (HDF5 as default).|
-|Pandas               |(bool)   - |Enable Pandas integration.|
-|Index_tweets         |(string) - |Custom Elasticsearch Index name for Tweets (default: twinttweets).|
-|Index_follow         |(string) - |Custom Elasticsearch Index name for Follows (default: twintgraph).|
-|Index_users          |(string) - |Custom Elasticsearch Index name for Users (default: twintuser).|
-|Index_type           |(string) - |Custom Elasticsearch Document type (default: items).|
-|Retries_count        |(int)    - |Number of retries of requests (default: 10).|
-|Resume               |(int)    - |Resume from a specific tweet id (**currently broken, January 11, 2019**).|
-|Images               |(bool)   - |Display only Tweets with images.|
-|Videos               |(bool)   - |Display only Tweets with videos.|
-|Media                |(bool)   - |Display Tweets with only images or videos.|
-|Replies              |(bool)   - |Display replies to a subject.|
-|Pandas_clean         |(bool)   - |Automatically clean Pandas dataframe at every scrape.|
-|Lowercase            |(bool)   - |Automatically convert uppercases in lowercases.|
-|Pandas_au            |(bool)   - |Automatically update the Pandas dataframe at every scrape.|
-|Proxy_host           |(string) - |Proxy hostname or IP.|
-|Proxy_port           |(int)    - |Proxy port.|
-|Proxy_type           |(string) - |Proxy type.|
-|Tor_control_port     |(int) - Tor| control port.|
-|Tor_control_password |(string) - |Tor control password (not hashed).|
-|Retweets             |(bool)   - |Display replies to a subject.|
-|Hide_output          |(bool)   - |Hide output.|
-|Get_replies          |(bool)   - |All replies to the tweet.|
-</pre>
-</details>
-
-### Crawl Tweets
 [Twint](https://github.com/twintproject/twint) is an advanced Twitter scraping tool written in Python that allows for scraping Tweets from Twitter profiles without using Twitter's API. We utilise twint to get tweets, and store the results into a pandas dataframe. We created a simple function that you can see in the actual project that integrate Pandas with Twint API for this part. Next, there are many features we have from the query we just did. There’s a lot of different things to do with this data, but for this project we’ll only use some of them, namely `date`, `time`, `username`, `tweet`, `hashtags`, `likes_count`, `replies_count`, and `retweets_count`.
 
+### Collect Forex Data
+We downloaded the forex data from Mecklai Financial. After pre-processing, we get a new column "label", which means the differentiation between two days. Label {0, 1} is the forex movement label telling whether the forex trade price is up or down after a certain time. For this study, we used only GBP/USD price from the Macrotrends website. Macrotrends provides lots of foreign exchange data, such as EUR/USD, USD/JPY, USD/CNY, AUD/USD, EUR/GBP, USD/CHF, EUR/CHF, GBP/JPY and EUR/JPY. Moreover, they also illustrate interactive historical chart showing the daily forex price.
+
+### Combine Tweets and Forex
+The forex movement prediction task can be defined as assigning movement label for the tweets input. The forex prediction is conducted as a binary classification task (up or down). The evaluation metrics are F1 and Matthews Correlation Coefficient (MCC). MCC is often reported in stock movement forecast (Xu and Cohen, 2018; Ding et al., 2016) because it can overcome the data imbalance issue.
+
+## Modelling
+![](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/model%20structure.png?raw=true)
+
+The overview of our model is displayed above. The model can be generally devided into three steps:
+1. Tweets ranking.
+2. Tweets pre-processing.
+3. Inter-groups aggregation.
+
+In step 1, we conduct zero-shot learning on this paragraph to select the most important tweets on a daily basis. Tweets are then ranked by latent embedding approach, which is a common approach to zero shot learning in the computer vision setting. In the text domain, we have the advantage that we can trivially use a single model to embed both the data and the class names into the same space, eliminating the need for the data-hungry alignment step. We therefore decided to run some experiments with Sentence-BERT, a recent technique which fine-tunes the pooled BERT sequence representations for increased semantic richness, as a method for obtaining sequence and label embeddings. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/Zero-shot%20Learning.ipynb).
+
+In step 2, we conduct some text pre-processing work.
 ```python
-class HiddenPrints:
-    def __enter__(self):
-        self._original_stdout = sys.stdout
-        sys.stdout = open(os.devnull, 'w')
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        sys.stdout.close()
-        sys.stdout = self._original_stdout
-
-# 63 Top Forex Twitter Accounts: 
-# https://www.forexcrunch.com/60-top-forex-twitter-accounts/
-# https://towardsdatascience.com/analyzing-tweets-with-nlp-in-minutes-with-spark-optimus-and-twint-a0c96084995f
-def tweets_to_dateframe_by_year(search, output_file, year="2020"):
-    # Configure
-    c = twint.Config()
-    c.Search = search
-    c.Year = year
-    c.Lang = "en"
-    c.Pandas = True
-    c.Store_csv = True
-    c.Format = "Username: {username} |  Tweet: {tweet}"
-    c.Output = output_file
-    c.Hide_output = True
-
-    # Run
-    with HiddenPrints():
-        print(twint.run.Search(c))
+class TweetsPreprocessor:
     
-    return "Done scraping tweets!"
+    def __init__(self, contractions_dict, lower=True):
+        self.contractions_dict = contractions_dict
+        self.lower = lower
+        
+    def remove_unicode(self, text):
+        """ Removes unicode strings like "\u002c" and "x96" """
+        text = re.sub(r'(\\u[0-9A-Fa-f]+)',r'', text)       
+        text = re.sub(r'[^\x00-\x7f]',r'',text)
+        return text
 
-def tweets_to_dateframe_by_interval(search, output_file, since, until):
-    # Configure
-    c = twint.Config()
-    c.Search = search
-    c.Since = since
-    c.Until = until
-    c.Lang = "en"
-    c.Pandas = True
-    c.Store_csv = True
-    c.Format = "Username: {username} |  Tweet: {tweet}"
-    c.Output = output_file
-    c.Hide_output = True
+    def replace_URL(self, text):
+        """ Replaces url address with "url" """
+        text = re.sub('((www\.[^\s]+)|(https?://[^\s]+))','url',text)
+        text = re.sub(r'#([^\s]+)', r'\1', text)
+        return text
 
-    # Run
-    with HiddenPrints():
-        print(twint.run.Search(c))
-    
-    return "Done scraping tweets!"
+    def replace_at_user(self, text):
+        """ Replaces "@user" with "atUser" """
+        text = re.sub('@[^\s]+','atUser',text)
+        return text
+
+    def remove_hashtag_in_front_of_word(self, text):
+        """ Removes hastag in front of a word """
+        text = re.sub(r'#([^\s]+)', r'\1', text)
+        return text
+
+    # Function for expanding contractions
+    def expand_contractions(self, text, contractions_dict=contractions_dict):
+        # Regular expression for finding contractions
+        contractions_re = re.compile('(%s)' % '|'.join(contractions_dict.keys()))
+        def replace(match):
+            return contractions_dict[match.group(0)]
+        return contractions_re.sub(replace, text)
+
+    def ultimate_clean(self, text):
+        if self.lower:
+            text = text.lower()
+        text = self.remove_unicode(text)
+        text = self.replace_URL(text)
+        text = self.replace_at_user(text)
+        text = self.remove_hashtag_in_front_of_word(text)
+        text = self.expand_contractions(text)
+        return text
 ```
 
-Test on the function.
-```python
-for year in tqdm(["2017", "2018", "2019", "2020"]):
-    tweets_to_dateframe_by_year(search="FXstreetNews", output_file="forex.csv", year=year)
+In step 3, we combine top k daily tweets in order to aggregate semantic information at the inter-groups level. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/BERT%20Aggregate%20Model.ipynb).
 
-cols = ["date", "time", "username", "tweet", "hashtags", "likes_count", "replies_count", "retweets_count"]
-df = pd.read_csv("forex.csv", usecols=cols)
-print("# of tweets: {}".format(df.shape[0]))
-df.sort_values(by="date", ascending=True, inplace=True)
-df.reset_index(drop=True, inplace=True)
-df.head()
-```
+### Experiment Setting
+We choose the transformers from HuggingFace as implement and choose the bert-base-uncased version. We truncate the BERT input to 64 tokens and fine-tune the BERT parameters during training. We adopt the Adam optimizer with the initial learning rate of 2e-5. We apply the dropout regularization with the dropout probability of 0.25 to reduce over-fitting. The batch size is 32. The training epoch is 4. The weight of L2 regularization is 0.1. When splitting the dataset, we guarantee that the samples in train set are previous to samples in valid set and test set to avoid the possible information leakage. The forex prediction is conducted as a binary classification task (up or down). The evaluation metrics are F1 and Matthews Correlation Coefficient (MCC). MCC is often reported in stock movement forecast because it can deal with the data imbalance problem.
 
-||date    |time    |username    |tweet   |replies_count   |retweets_count  |likes_count |hashtags|
-|---|---|---|---|---|---|---|---|---|
-|0   |2015-01-02  |22:37:53    |seekinwealth|    ForexLive: Cable continues lower, nears 1.5400...|   |0   |0   |0   |['#forex']|
-|1   |2015-01-02  |23:58:43    |forexcommentary| Technical analysis: GBP/USD taking it on the c...|   |0   |1   |1   |['#forex']|
-|2   |2015-01-02  |23:57:17    |cdethleffsen|    Trends in US Manufacturing\n http://bit.ly/1Ai...|   |0   |0   |1   |[]|
-|3   |2015-01-02  |23:55:36    |forexnow|    Technical analysis: GBP/USD taking it on the c...|   |0   |0   |1   |[]|
-|4   |2015-01-02  |23:51:07    |forexlive|   USD/JPY quickly gives up gains, slides back to...|   |0   |0   |1   |[]|
+### Result
+![]()
