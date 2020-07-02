@@ -18,6 +18,10 @@ We downloaded the forex data from Mecklai Financial. After pre-processing, we ge
 The forex movement prediction task can be defined as assigning movement label for the tweets input. The forex prediction is conducted as a binary classification task (up or down). The evaluation metrics are F1 and Matthews Correlation Coefficient (MCC). MCC is often reported in stock movement forecast (Xu and Cohen, 2018; Ding et al., 2016) because it can overcome the data imbalance issue.
 
 ## Modelling
+### Baseline Model
+![](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/word2vec%20model%20structure.png?raw=true)
+
+### Proposed Model
 ![](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/model%20structure.png?raw=true)
 
 The overview of our model is displayed above. The model can be generally devided into three steps:
@@ -28,53 +32,6 @@ The overview of our model is displayed above. The model can be generally devided
 In step 1, we conduct zero-shot learning on this paragraph to select the most important tweets on a daily basis. Tweets are then ranked by latent embedding approach, which is a common approach to zero shot learning in the computer vision setting. In the text domain, we have the advantage that we can trivially use a single model to embed both the data and the class names into the same space, eliminating the need for the data-hungry alignment step. We therefore decided to run some experiments with Sentence-BERT, a recent technique which fine-tunes the pooled BERT sequence representations for increased semantic richness, as a method for obtaining sequence and label embeddings. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/Zero-shot%20Learning.ipynb).
 
 In step 2, we conduct some text pre-processing work. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/Tweet%20Preprocessing.ipynb).
-```python
-class TweetsPreprocessor:
-    
-    def __init__(self, contractions_dict, lower=True):
-        self.contractions_dict = contractions_dict
-        self.lower = lower
-        
-    def remove_unicode(self, text):
-        """ Removes unicode strings like "\u002c" and "x96" """
-        text = re.sub(r'(\\u[0-9A-Fa-f]+)',r'', text)       
-        text = re.sub(r'[^\x00-\x7f]',r'',text)
-        return text
-
-    def replace_URL(self, text):
-        """ Replaces url address with "url" """
-        text = re.sub('((www\.[^\s]+)|(https?://[^\s]+))','url',text)
-        text = re.sub(r'#([^\s]+)', r'\1', text)
-        return text
-
-    def replace_at_user(self, text):
-        """ Replaces "@user" with "atUser" """
-        text = re.sub('@[^\s]+','atUser',text)
-        return text
-
-    def remove_hashtag_in_front_of_word(self, text):
-        """ Removes hastag in front of a word """
-        text = re.sub(r'#([^\s]+)', r'\1', text)
-        return text
-
-    # Function for expanding contractions
-    def expand_contractions(self, text, contractions_dict=contractions_dict):
-        # Regular expression for finding contractions
-        contractions_re = re.compile('(%s)' % '|'.join(contractions_dict.keys()))
-        def replace(match):
-            return contractions_dict[match.group(0)]
-        return contractions_re.sub(replace, text)
-
-    def ultimate_clean(self, text):
-        if self.lower:
-            text = text.lower()
-        text = self.remove_unicode(text)
-        text = self.replace_URL(text)
-        text = self.replace_at_user(text)
-        text = self.remove_hashtag_in_front_of_word(text)
-        text = self.expand_contractions(text)
-        return text
-```
 
 In step 3, we combine top k daily tweets in order to aggregate semantic information at the inter-groups level. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/BERT%20Aggregate%20Model.ipynb).
 
@@ -84,11 +41,6 @@ We choose the transformers from HuggingFace as implement and choose the bert-bas
 ### Result
 #### History Plot
 ![result](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/result.png?raw=true)
-
-#### Confusion Matrix: 
-<p align="center">
-    <img src="https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/confusion%20matrix.png?raw=true" width="500" height="400">
-</p>
 
 #### Backtesting
 ![backtesting](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/backtesting.png?raw=true)
