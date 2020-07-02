@@ -36,7 +36,7 @@ Reference:
 2. Yoon Kim, Convolutional Neural Networks for Sentence Classification: [paper](https://arxiv.org/pdf/1408.5882.pdf)
 
 #### Recurrent Neural Networks
-Vanilla RNNs (Recurrent Neural Networks) suffer from vanishing and exploding gradient problems. LSTMs (Long Short Term Memory) deal with these problems by introducing new gates, such as input and forget gates, which allow for a better control over the gradient flow and enable better preservation of long-range dependencies. The long range dependency in RNN is resolved by increasing the number of repeating layer in LSTM. GRUs are similar to LSTMs, but use a simplified structure. They also use a set of gates to control the flow of information, but they don't use separate memory cells, and they use fewer gates.
+Vanilla RNNs (Recurrent Neural Networks) suffer from vanishing and exploding gradient problems. LSTMs (Long Short Term Memory) deal with these problems by introducing new gates, such as input and forget gates, which allow for a better control over the gradient flow and enable better preservation of long-range dependencies. The long range dependency in RNN is resolved by increasing the number of repeating layer in LSTM. GRUs are similar to LSTMs, but use a simplified structure. They also use a set of gates to control the flow of information, but they don't use separate memory cells, and they use fewer gates. Raimi Karim created a animated illustration for RNN, LSTM and GRU in his [blog](https://towardsdatascience.com/animated-rnn-lstm-and-gru-ef124d06cf45).
 
 ![](https://miro.medium.com/max/1400/1*DQ_mD_mIN3M6gpVoe2NALA.png)
 
