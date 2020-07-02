@@ -21,6 +21,27 @@ The forex movement prediction task can be defined as assigning movement label fo
 ### Baseline Model
 ![](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/word2vec%20model%20structure.png?raw=true)
 
+#### Word2Vec
+[Word2vec](https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf) is a method to efficiently create word embeddings proposed by Google and has been around since 2013. Distributed representations of words in a vector space help learning algorithms to achieve better performance in natural language processing tasks. Jay Alammar articulates Word2Vec in his [blog](http://jalammar.github.io/illustrated-word2vec/).
+
+#### Convolutional Neural Networks
+Convolutional neural networks (CNN) utilize layers with convolving filters that are applied to local features (LeCun et al., 1998). Originally invented for computer vision, CNN models have subsequently been shown to be effective for NLP and have achieved excellent results in semantic parsing (Yih et al., 2014), search query retrieval (Shen et al., 2014), sentence modeling (Kalchbrenner et al., 2014), and other traditional NLP tasks (Collobert et al., 2011).
+
+![](http://www.wildml.com/wp-content/uploads/2015/11/Screen-Shot-2015-11-06-at-12.05.40-PM-1024x937.png)
+
+Reference:
+1. Alon Jacovi, Understanding Convolutional Neural Networks for Text Classification: [paper](https://www.aclweb.org/anthology/W18-5408.pdf)
+2. Yoon Kim, Convolutional Neural Networks for Sentence Classification: [paper](https://arxiv.org/pdf/1408.5882.pdf)
+
+#### Recurrent Neural Networks
+Vanilla RNNs (Recurrent Neural Networks) suffer from vanishing and exploding gradient problems. LSTMs (Long Short Term Memory) deal with these problems by introducing new gates, such as input and forget gates, which allow for a better control over the gradient flow and enable better preservation of long-range dependencies. The long range dependency in RNN is resolved by increasing the number of repeating layer in LSTM. GRUs are similar to LSTMs, but use a simplified structure. They also use a set of gates to control the flow of information, but they don't use separate memory cells, and they use fewer gates.
+
+![](https://miro.medium.com/max/1400/1*DQ_mD_mIN3M6gpVoe2NALA.png)
+
+![](https://miro.medium.com/max/1400/1*Ht2-sUJHi65wDwnR276k3A.png)
+
+![](https://miro.medium.com/max/1400/1*2zXEI3nbVV5mqSoDrVYscA.png)
+
 ### Proposed Model
 ![](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/model%20structure.png?raw=true)
 
