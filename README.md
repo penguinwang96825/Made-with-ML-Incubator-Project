@@ -19,9 +19,11 @@ The forex movement prediction task can be defined as assigning movement label fo
 
 ## Modelling
 ### Baseline Model
+In this work, we combine the strengths of both CNN and LSTM for sentence representation and text classification. CNN-LSTM utilizes CNN to extract a sequence of higher-level phrase representations, and are fed into a LSTM to obtain the sentence representation. CNN-LSTM is able to capture both local features of phrases as well as global and temporal sentence semantics.
+
 ![](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/word2vec%20model%20structure.png?raw=true)
 
-#### Word2Vec
+#### Word2Vec Embedding
 [Word2vec](https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf) is a method to efficiently create word embeddings proposed by Google and has been around since 2013. Distributed representations of words in a vector space help learning algorithms to achieve better performance in natural language processing tasks. Jay Alammar articulates Word2Vec in his [blog](http://jalammar.github.io/illustrated-word2vec/).
 
 #### Convolutional Neural Networks
