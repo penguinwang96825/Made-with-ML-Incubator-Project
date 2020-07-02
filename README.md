@@ -38,25 +38,28 @@ Reference:
 #### Recurrent Neural Networks
 Vanilla RNNs (Recurrent Neural Networks) suffer from vanishing and exploding gradient problems. LSTMs (Long Short Term Memory) deal with these problems by introducing new gates, such as input and forget gates, which allow for a better control over the gradient flow and enable better preservation of long-range dependencies. The long range dependency in RNN is resolved by increasing the number of repeating layer in LSTM. GRUs are similar to LSTMs, but use a simplified structure. They also use a set of gates to control the flow of information, but they don't use separate memory cells, and they use fewer gates. Raimi Karim created a animated illustration for RNN, LSTM and GRU in his [blog](https://towardsdatascience.com/animated-rnn-lstm-and-gru-ef124d06cf45).
 
+##### RNN
 ![](https://miro.medium.com/max/1400/1*DQ_mD_mIN3M6gpVoe2NALA.png)
 
+##### LSTM
 ![](https://miro.medium.com/max/1400/1*Ht2-sUJHi65wDwnR276k3A.png)
 
+##### GRU
 ![](https://miro.medium.com/max/1400/1*2zXEI3nbVV5mqSoDrVYscA.png)
 
 ### Proposed Model
 ![](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/model%20structure.png?raw=true)
 
 The overview of our model is displayed above. The model can be generally devided into three steps:
-1. Tweets ranking.
-2. Tweets pre-processing.
-3. Inter-groups aggregation.
+1. Tweets ranking. ([notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/Zero-shot%20Learning.ipynb))
+2. Tweets pre-processing. ([notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/Tweet%20Preprocessing.ipynb))
+3. Inter-groups aggregation. ([notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/BERT%20Aggregate%20Model.ipynb))
 
-In step 1, we conduct zero-shot learning on this paragraph to select the most important tweets on a daily basis. Tweets are then ranked by latent embedding approach, which is a common approach to zero shot learning in the computer vision setting. In the text domain, we have the advantage that we can trivially use a single model to embed both the data and the class names into the same space, eliminating the need for the data-hungry alignment step. We therefore decided to run some experiments with Sentence-BERT, a recent technique which fine-tunes the pooled BERT sequence representations for increased semantic richness, as a method for obtaining sequence and label embeddings. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/Zero-shot%20Learning.ipynb).
+In step 1, we conduct zero-shot learning on this paragraph to select the most important tweets on a daily basis. Tweets are then ranked by latent embedding approach, which is a common approach to zero shot learning in the computer vision setting. In the text domain, we have the advantage that we can trivially use a single model to embed both the data and the class names into the same space, eliminating the need for the data-hungry alignment step. We therefore decided to run some experiments with Sentence-BERT, a recent technique which fine-tunes the pooled BERT sequence representations for increased semantic richness, as a method for obtaining sequence and label embeddings.
 
-In step 2, we conduct some text pre-processing work. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/Tweet%20Preprocessing.ipynb).
+In step 2, we conduct some text pre-processing work. Text classification in general works better if the text is preprocessed well. Do give some extra time to it, it will all be worth it in the end.
 
-In step 3, we combine top k daily tweets in order to aggregate semantic information at the inter-groups level. Here is our [notebook](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/notebook/BERT%20Aggregate%20Model.ipynb).
+In step 3, we combine top k daily tweets in order to aggregate semantic information at the inter-groups level. Finally, pass it into a softmax layer to normalize it into a probability distribution consisting of 2 probabilities (up or down) proportional to the exponentials of the input numbers.
 
 ### Experiment Setting
 We choose the transformers from HuggingFace as implement and choose the bert-base-uncased version. We truncate the BERT input to 64 tokens and fine-tune the BERT parameters during training. We adopt the Adam optimizer with the initial learning rate of 2e-5. We apply the dropout regularization with the dropout probability of 0.25 to reduce over-fitting. The batch size is 32. The training epoch is 4. The weight of L2 regularization is 0.1. When splitting the dataset, we guarantee that the samples in train set are previous to samples in valid set and test set to avoid the possible information leakage. The forex prediction is conducted as a binary classification task (up or down). The evaluation metrics are F1 and Matthews Correlation Coefficient (MCC). MCC is often reported in stock movement forecast because it can deal with the data imbalance problem.
@@ -67,3 +70,6 @@ We choose the transformers from HuggingFace as implement and choose the bert-bas
 
 #### Backtesting
 ![backtesting](https://github.com/penguinwang96825/Made-with-ML-Incubator-Project/blob/master/image/backtesting.png?raw=true)
+
+## Conclusion
+In this project we investigated sentiment analysis and signal processing features for predicting the forex daily trend. The prediction is posed as a binary classification problem for which the model predicts whether forex is going up or down. Both word2vec and aggregated BERT  are used to find best feature subsets for the classification problem. The results show that the proposed model still has a long way to go.
