@@ -108,3 +108,12 @@ def wordcloud(clean_tweet):
 def getPolarity(tweet):
     sentiment_polarity = TextBlob(tweet).sentiment.polarity
     return sentiment_polarity
+
+
+def getAnalysis(polarity_score):
+    if polarity_score < 0:
+        return "Negative"
+    elif polarity_score == 0:
+        return "Neutral"
+    else:
+        return "Positive"
