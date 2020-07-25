@@ -102,4 +102,9 @@ def wordcloud(clean_tweet):
     plt.savefig("cloud.jpg")
     img = Image.open("cloud.jpg")
     return img
-    
+
+# polarity
+
+def getPolarity(tweet):
+    sentiment_polarity = TextBlob(tweet).sentiment.polarity
+    return sentiment_polarity
