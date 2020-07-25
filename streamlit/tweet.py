@@ -22,10 +22,10 @@ import os
 #access_token = os.getenv("access_token")
 #access_token_secret = os.getenv("access_token_secret")
 
-consumer_key="yw14UxU2keHgWZmPcpudDMSOz"
-consumer_secret="zUFlHBMgCy4NZKh6nSDtly6U0FbqVQOMFIvlJyKPLwksD5jCXQ"
-access_token="207458888-8hMxQDGfoceMJLGUusM0Ya9mimdGuNpIHYvmCwko"
-access_token_secret="9L32xPjQEMtZckfolkGsDHC7BAPhcJ7xGkUyevUfHDh7P"
+consumer_key=""
+consumer_secret=""
+access_token=""
+access_token_secret=""
 
 # creating the authentication object, setting access token and creating the api object
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -67,7 +67,7 @@ def get_tweets(user_name, tweet_count):
 # preprocessing
 
 
-extra_stopwords = ["The", "It", "it", "in", "In", "wh"]
+extra_stopwords = ["The", "It", "it", "in", "In", "wh", "yo"]
 
 
 def prep_data(tweet):
