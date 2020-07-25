@@ -18,10 +18,15 @@ import re
 import time
 import os
 
-consumer_key = os.getenv("consumer_key")
-consumer_secret = os.getenv("consumer_secret")
-access_token = os.getenv("access_token")
-access_token_secret = os.getenv("access_token_secret")
+#consumer_key = os.getenv("consumer_key")
+#consumer_secret = os.getenv("consumer_secret")
+#access_token = os.getenv("access_token")
+#access_token_secret = os.getenv("access_token_secret")
+
+consumer_key="yw14UxU2keHgWZmPcpudDMSOz"
+consumer_secret="zUFlHBMgCy4NZKh6nSDtly6U0FbqVQOMFIvlJyKPLwksD5jCXQ"
+access_token="207458888-8hMxQDGfoceMJLGUusM0Ya9mimdGuNpIHYvmCwko"
+access_token_secret="9L32xPjQEMtZckfolkGsDHC7BAPhcJ7xGkUyevUfHDh7P"
 
 # creating the authentication object, setting access token and creating the api object
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
