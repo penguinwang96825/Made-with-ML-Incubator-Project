@@ -117,3 +117,58 @@ def getAnalysis(polarity_score):
         return "Neutral"
     else:
         return "Positive"
+
+# subjectivity
+
+def getSubjectivity(tweet):
+    sentiment_subjectivity = TextBlob(tweet).sentiment.subjectivity
+    return sentiment_subjectivity
+
+# Sentiment score, objectivity and subjectivity
+
+def getSubAnalysis(subjectivity_score):
+    if subjectivity_score <= 0.5:
+        return "Objective"
+    else:
+        return "Subjective"
+
+# plot sentiment
+
+def plot_sentiments(tweet_df):
+    sentiment_df = (
+        pd.DataFrame(tweet_df["sentiment"].value_counts())
+        .reset_index()
+        .rename(columns={"index": "sentiment_name"})
+    )
+    fig = go.Figure(
+        [go.Bar(x=sentiment_df["sentiment_name"], y=sentiment_df["sentiment"])]
+    )
+    fig.update_layout(
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False, title="Sentiment Score"),
+        plot_bgcolor="rgba(0,0,0,0)",
+    )
+    return fig
+
+# plot subjectivity
+
+def plot_subjectivity(tweet_df):
+    
+    colors = ["mediumturquoise", "blue"]
+
+    fig = go.Figure(
+        data=[
+            go.Pie(
+                values=tweet_df["subjectivity"].values,
+                labels=tweet_df["sub_obj"].values,
+            )
+        ]
+    )
+    fig.update_traces(
+        hoverinfo="label",
+        textinfo="percent",
+        textfont_size=18,
+        marker=dict(colors=colors, line=dict(color="#000000", width=2)),
+    )
+    return fig
+
