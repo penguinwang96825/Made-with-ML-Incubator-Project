@@ -27,3 +27,35 @@ access_token_secret = os.getenv("access_token_secret")
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True)
+
+
+# get tweets
+def get_tweets(user_name, tweet_count):
+    
+    tweets_list = []
+    img_url = ""
+    name = ""
+
+    try:
+        for tweet in api.user_timeline(
+            id=user_name, count=tweet_count, tweet_mode="extended"
+        ):
+            tweets_dict = {}
+            tweets_dict["date_created"] = tweet.created_at
+            tweets_dict["tweet_id"] = tweet.id
+            tweets_dict["tweet"] = tweet.full_text
+
+            tweets_list.append(tweets_dict)
+
+        img_url = tweet.user.profile_image_url
+        name = tweet.user.name
+        screen_name = tweet.user.screen_name
+        desc = tweet.user.description
+
+    except BaseException as e:
+        st.exception(
+            "Failed to retrieve the Tweets. Please check if the twitter handle is correct. "
+        )
+        sys.exit(1)
+
+    return tweets_list, img_url, name, screen_name, desc
