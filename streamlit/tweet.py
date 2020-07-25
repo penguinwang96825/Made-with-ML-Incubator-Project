@@ -59,3 +59,47 @@ def get_tweets(user_name, tweet_count):
         sys.exit(1)
 
     return tweets_list, img_url, name, screen_name, desc
+
+# preprocessing
+
+
+extra_stopwords = ["The", "It", "it", "in", "In", "wh"]
+
+
+def prep_data(tweet):
+
+    # cleaning the data
+    tweet = re.sub("https?:\/\/\S+", "", tweet)  # replacing url with domain name
+    tweet = re.sub("#[A-Za-z0–9]+", " ", tweet)  # removing #mentions
+    tweet = re.sub("#", " ", tweet)  # removing hash tag
+    tweet = re.sub("\n", " ", tweet)  # removing \n
+    tweet = re.sub("@[A-Za-z0–9]+", "", tweet)  # removing @mentions
+    tweet = re.sub("RT", "", tweet)  # removing RT
+    tweet = re.sub("^[a-zA-Z]{1,2}$", "", tweet)  # removing 1-2 char long words
+    tweet = re.sub("\w*\d\w*", "", tweet)  # removing words containing digits
+    for word in extra_stopwords:
+        tweet = tweet.replace(word, "")
+
+    # lemmitizing
+    lemmatizer = WordNetLemmatizer()
+    new_s = ""
+    for word in tweet.split(" "):
+        lemmatizer.lemmatize(word)
+        if word not in stopwords.words("english"):
+            new_s += word + " "
+
+    return new_s[:-1]
+
+    # Word Cloud
+def wordcloud(clean_tweet):
+    
+    wordcloud_words = " ".join(clean_tweet)
+    wordcloud = WordCloud(
+        height=300, width=500, background_color="black", random_state=100,
+    ).generate(wordcloud_words)
+    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.axis("off")
+    plt.savefig("cloud.jpg")
+    img = Image.open("cloud.jpg")
+    return img
+    
