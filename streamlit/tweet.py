@@ -172,3 +172,129 @@ def plot_subjectivity(tweet_df):
     )
     return fig
 
+# Streamlit app
+
+def app():
+    
+    tweet_count = st.empty()
+    user_name = st.empty()
+
+    st.sidebar.header("Enter the Details Here!!")
+
+    user_name = st.sidebar.text_area("Enter the Twitter Handle without @")
+
+    tweet_count = st.sidebar.slider(
+        "Select the number of Latest Tweets to Analyze", 0, 50, 1
+    )
+
+    st.sidebar.markdown(
+        "#### Press Ctrl+Enter or Use the Slider to initiate the analysis."
+    )
+    st.sidebar.markdown(
+        "*****************************************************************"
+    )
+
+    st.markdown("Created By: [Ekta Sharma](https://www.linkedin.com/in/ektasharma3/)")
+    st.markdown(
+        """# Twitter Sentiment Analyzer :slightly_smiling_face: :neutral_face: :angry: """
+    )
+    st.write(
+        "This app analyzes the Twitter tweets and returns the most commonly used words, associated sentiments and the subjectivity score!! Note that Private account / Protected Tweets will not be accessible through this app."
+    )
+    st.write(
+        ":bird: All results are based on the number of Latest Tweets selected on the Sidebar. :point_left:"
+    )
+
+    # main
+    if user_name != "" and tweet_count > 0:
+
+        with st.spinner("Please Wait!! Analysis is in Progress......:construction:"):
+            time.sleep(1)
+
+        tweets_list, img_url, name, screen_name, desc = get_tweets(
+            user_name, tweet_count
+        )
+
+        # adding the retrieved tweet data into a dataframe
+        tweet_df = pd.DataFrame([tweet for tweet in tweets_list])
+        st.sidebar.success("Twitter Handle Details:")
+        st.sidebar.markdown("Name: " + name)
+        st.sidebar.markdown("Screen Name: @" + screen_name)
+        st.sidebar.markdown("Description: " + desc)
+
+        # calling the function to prep the data
+        tweet_df["clean_tweet"] = tweet_df["tweet"].apply(prep_data)
+
+        # calling the function to create sentiment scoring
+        tweet_df["polarity"] = tweet_df["clean_tweet"].apply(getPolarity)
+        tweet_df["sentiment"] = tweet_df["polarity"].apply(getAnalysis)
+        tweet_df["subjectivity"] = tweet_df["clean_tweet"].apply(getSubjectivity)
+        tweet_df["sub_obj"] = tweet_df["subjectivity"].apply(getSubAnalysis)
+
+        # calling the function for plotting the sentiments
+        senti_fig = plot_sentiments(tweet_df)
+        st.success(
+            "Sentiment Analysis for Twitter Handle @"
+            + user_name
+            + " based on the last "
+            + str(tweet_count)
+            + " tweet(s)!!"
+        )
+        st.plotly_chart(senti_fig, use_container_width=True)
+
+        # calling the function for plotting the subjectivity
+        subjectivity_fig = plot_subjectivity(tweet_df)
+
+        if sum(tweet_df["subjectivity"].values) > 0:
+            st.success(
+                "Tweet Subjectivity vs. Objectivity for Twitter Handle @"
+                + user_name
+                + " based on the last "
+                + str(tweet_count)
+                + " tweet(s)!!"
+            )
+            st.plotly_chart(subjectivity_fig, use_container_width=True)
+        else:
+            st.error(
+                "Sorry, too few words to analyze for Subjectivity & Objectivity Score. Please increase the tweet count using the slider on the sidebar for better results."
+            )
+
+        # calling the function to create the word cloud
+        img = wordcloud(tweet_df["clean_tweet"])
+        st.success(
+            "Word Cloud for Twitter Handle @"
+            + user_name
+            + " based on the last "
+            + str(tweet_count)
+            + " tweet(s)!!"
+        )
+        st.image(img)
+
+        # displaying the latest tweets
+        st.subheader(
+            "Latest Tweets (Max 10 returned if more than 10 selected using the sidebar)!"
+        )
+        st.markdown("*****************************************************************")
+        st.success("Latest Tweets from the Twitter Handle @" + user_name)
+
+        length = 10 if len(tweet_df) > 10 else len(tweet_df)
+
+        for i in range(length):
+            st.write(
+                "Tweet Number: "
+                + str(i + 1)
+                + ", Tweet Date: "
+                + str(tweet_df["date_created"][i])
+            )
+            st.info(tweet_df["tweet"][i])
+    else:
+        st.info(
+            ":point_left: Enter the Twitter Handle & Number of Tweets to Analyze on the SideBar :point_left:"
+        )
+
+# main
+if __name__ == "__main__":
+    
+    caching.clear_cache()
+    st.empty()
+    app()
