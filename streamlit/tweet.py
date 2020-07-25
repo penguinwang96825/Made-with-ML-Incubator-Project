@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import nltk
 from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords
 from wordcloud import WordCloud
 from textblob import TextBlob
 import re
@@ -74,26 +73,9 @@ extra_stopwords = ["The", "It", "it", "in", "In", "wh"]
 def prep_data(tweet):
 
     # cleaning the data
-    tweet = re.sub("https?:\/\/\S+", "", tweet)  # replacing url with domain name
-    tweet = re.sub("#[A-Za-z0–9]+", " ", tweet)  # removing #mentions
-    tweet = re.sub("#", " ", tweet)  # removing hash tag
-    tweet = re.sub("\n", " ", tweet)  # removing \n
-    tweet = re.sub("@[A-Za-z0–9]+", "", tweet)  # removing @mentions
-    tweet = re.sub("RT", "", tweet)  # removing RT
-    tweet = re.sub("^[a-zA-Z]{1,2}$", "", tweet)  # removing 1-2 char long words
-    tweet = re.sub("\w*\d\w*", "", tweet)  # removing words containing digits
-    for word in extra_stopwords:
-        tweet = tweet.replace(word, "")
 
-    # lemmitizing
-    lemmatizer = WordNetLemmatizer()
-    new_s = ""
-    for word in tweet.split(" "):
-        lemmatizer.lemmatize(word)
-        if word not in stopwords.words("english"):
-            new_s += word + " "
 
-    return new_s[:-1]
+    return null
 
     # Word Cloud
 def wordcloud(clean_tweet):
@@ -199,7 +181,7 @@ def app():
         "*****************************************************************"
     )
 
-    st.markdown("Created By: [Ekta Sharma](https://www.linkedin.com/in/ektasharma3/)")
+    st.markdown("Made With ML Incubator")
     st.markdown(
         """# Twitter Sentiment Analyzer :slightly_smiling_face: :neutral_face: :angry: """
     )
@@ -213,7 +195,7 @@ def app():
     # main
     if user_name != "" and tweet_count > 0:
 
-        with st.spinner("Please Wait!! Analysis is in Progress......:construction:"):
+        with st.spinner("Please Wait!! Analysis is in Progress..."):
             time.sleep(1)
 
         tweets_list, img_url, name, screen_name, desc = get_tweets(
@@ -228,7 +210,7 @@ def app():
         st.sidebar.markdown("Description: " + desc)
 
         # calling the function to prep the data
-        tweet_df["clean_tweet"] = tweet_df["tweet"].apply(prep_data)
+        tweet_df["clean_tweet"] = tweet_df["tweet"]
 
         # calling the function to create sentiment scoring
         tweet_df["polarity"] = tweet_df["clean_tweet"].apply(getPolarity)
