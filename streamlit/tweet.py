@@ -82,12 +82,12 @@ def wordcloud(clean_tweet):
     
     wordcloud_words = " ".join(clean_tweet)
     wordcloud = WordCloud(
-        height=300, width=500, background_color="black", random_state=100,
+        height=300, width=500, background_color="white", random_state=100,
     ).generate(wordcloud_words)
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
-    plt.savefig("cloud.jpg")
-    img = Image.open("cloud.jpg")
+    plt.savefig("wordcloud.jpg")
+    img = Image.open("wordcloud.jpg")
     return img
 
 # polarity
@@ -141,7 +141,7 @@ def plot_sentiments(tweet_df):
 
 def plot_subjectivity(tweet_df):
     
-    colors = ["mediumturquoise", "blue"]
+    colors = ["teal", "turquoise"]
 
     fig = go.Figure(
         data=[
@@ -181,9 +181,9 @@ def app():
         "*****************************************************************"
     )
 
-    st.markdown("Made With ML Incubator")
+    st.markdown(""" ## Made With ML Incubator """)
     st.markdown(
-        """# Twitter Sentiment Analyzer :slightly_smiling_face: :neutral_face: :angry: """
+        """# Twitter Sentiment Analysis"""
     )
     st.write(
         "This app analyzes the Twitter tweets and returns the most commonly used words, associated sentiments and the subjectivity score!! Note that Private account / Protected Tweets will not be accessible through this app."
