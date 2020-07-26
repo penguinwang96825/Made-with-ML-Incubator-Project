@@ -22,10 +22,10 @@ import os
 #access_token = os.getenv("access_token")
 #access_token_secret = os.getenv("access_token_secret")
 
-consumer_key=""
-consumer_secret=""
-access_token=""
-access_token_secret=""
+consumer_key="cRuhun1KZGIc7Sdi4Dk8EBdAV"
+consumer_secret="IIId4xraNi122X4V3pfWywpqmq6WjrMjOQKuy4LGbinJa2pMFS"
+access_token="1125227023478153216-64lbtrNoOJ6PDVMZZiPA9i1jQ39Qf3"
+access_token_secret="nz3E28Uk5fnSZlq19wj4OIcpuIGf2p6M2Sq9LjCy9vPnG"
 
 # creating the authentication object, setting access token and creating the api object
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
