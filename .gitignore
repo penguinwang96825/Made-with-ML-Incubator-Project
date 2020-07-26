@@ -2,3 +2,5 @@
 .github
 config.py
 forex.csv
+df_final.gzip
+.env

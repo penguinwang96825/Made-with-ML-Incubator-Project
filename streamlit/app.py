@@ -6,6 +6,10 @@ import matplotlib.pyplot as plt
 import joblib
 from wordcloud import WordCloud
 from wordcloud import STOPWORDS
+import requests
+from datetime import datetime
+
+api_token = 'ucscrG7YXCFz1Xp52lPk4GOqr5TyzWbRmxqrPYamcyCRke9l1RPu0pXRJa7e'
 
 st.title("Analysis of Tweets about Finance, Politics and Forex")
 st.sidebar.title("Analysis of Tweets ")
@@ -23,6 +27,20 @@ def load_data():
 
 data = load_data()
 
+@st.cache(persist=True)
+def load_url():
+    url = 'https://api.worldtradingdata.com/api/v1/forex_history'
+    params = {
+    'base': 'USD', 
+    'convert_to': 'GBP', 
+    "date_from": "2020-06-06", 
+    'date_to': "2020-06-14", 
+    'api_token': api_token}
+    response = requests.request('GET', url, params=params)
+    return response.text
+
+
+
 st.sidebar.subheader("Show random tweet")
 random_tweet = st.sidebar.radio('username', ('federalreserve', 'economics', 'ecb', 'ftfinancenews'))
 st.markdown(data.query("username == @random_tweet")[["tweet"]].sample(n=1).iat[0, 0])
@@ -39,3 +57,13 @@ if not st.sidebar.checkbox("hide", False, key='3'):
     plt.xticks([])
     plt.yticks([])
     st.pyplot()
+
+forex_data = load_url()
+st.write(forex_data)
+
+
+
+currency = st.sidebar.radio('currency',('USD'))
+ticker = forex_data[forex_data['Name'] == currency, 'Ticker']
+end_date = st.sidebar.date_input('end date', value=datetime.now()).strftime("%Y-%m-%d")
+start_date = st.sidebar.date_input('start date', value=datetime(2010, 5, 31)).strftime("%Y-%m-%d")
