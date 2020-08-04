@@ -9,6 +9,7 @@ import nltk
 import string
 import re
 import time
+import random
 import os
 import spacy
 import streamlit as st
@@ -17,6 +18,7 @@ import seaborn as sns
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+import spacy_streamlit
 
 from spacy import displacy
 from bs4 import BeautifulSoup
@@ -97,7 +99,7 @@ def insert_into_db():
 
 @st.cache(persist=True)
 def read_from_db():
-    conn = sqlite3.connect('twitter.db')
+    conn = sqlite3.connect('./twitter.db')
     df = pd.read_sql_query("SELECT * FROM TRADER", con=conn)
     return df
 
@@ -298,8 +300,10 @@ def select_top_k_retweeted_tweets(df, k=5, print_result=False):
     tweet_df = df.sort_values(by='retweet_count', ascending=False)
     tweet_df = tweet_df.reset_index(drop=True)
     top_k_retweeted_tweets = []
+    counts = []
     for i in range(k):
         top_k_retweeted_tweets.append(tweet_df['tweet'].iloc[i])
+        counts.append(tweet_df['retweet_count'].iloc[i])
     if print_result:
         # Total tweets
         print('Total tweets this period:', len(df.index))
@@ -313,14 +317,16 @@ def select_top_k_retweeted_tweets(df, k=5, print_result=False):
             print("#{}: ".format(i+1), tweet_df['retweet_count'].iloc[i], "\n", tweet_df['tweet'].iloc[i], "\n")
         print('\n')
     
-    return top_k_retweeted_tweets
+    return top_k_retweeted_tweets, counts
 
 def select_top_k_liked_tweets(df, k=5, print_result=False):
     tweet_df = df.sort_values(by='favorite_count', ascending=False)
     tweet_df = tweet_df.reset_index(drop=True)
     top_k_liked_tweets = []
+    counts = []
     for i in range(k):
         top_k_liked_tweets.append(tweet_df['tweet'].iloc[i])
+        counts.append(tweet_df['favorite_count'].iloc[i])
     if print_result:
         # Total tweets
         print('Total tweets this period:', len(df.index))
@@ -334,17 +340,11 @@ def select_top_k_liked_tweets(df, k=5, print_result=False):
             print("#{}: ".format(i+1), tweet_df['favorite_count'].iloc[i], "\n", tweet_df['tweet'].iloc[i], "\n")
         print('\n')
         
-    return top_k_liked_tweets
+    return top_k_liked_tweets, counts
 
 
-def show_entities(text):
-	import en_core_web_sm
-	nlp = en_core_web_sm.load()
-	# nlp = spacy.load("en_core_web_sm")
-	doc = nlp(text)
-	colors = {"ORG": "linear-gradient(90deg, #aa9cfc, #fc9ce7)"}
-	options = {"ents": ["ORG"], "colors": colors}
-	displacy.render(doc, style="ent", jupyter=True)
+def show_sim(text, key, nlp):
+	spacy_streamlit.visualize_similarity(nlp, (str(text), "forex"), key=key)
 
 
 def eda_on_tweet(user_name, tweet_count):
@@ -358,7 +358,7 @@ def eda_on_tweet(user_name, tweet_count):
 
         # Adding the retrieved tweet data into a dataframe
         tweet_df = pd.DataFrame([tweet for tweet in tweets_list])
-        st.sidebar.success("Twitter Handle Details:")
+        st.sidebar.success("Twitter Handle Details: ")
         st.sidebar.markdown("Name: " + name)
         st.sidebar.markdown("Screen Name: @" + screen_name)
         st.sidebar.markdown("Description: " + desc)
@@ -428,19 +428,24 @@ def eda_on_tweet(user_name, tweet_count):
 
 
 def twitter_stream(df, retweeted_k=5, liked_k=5):
-	st.markdown("## Top 5 retweeted tweets")
-	top_5_retweeted_tweets = select_top_k_retweeted_tweets(df, k=retweeted_k, print_result=False)
-	for i, tweet in enumerate(top_5_retweeted_tweets):
-		st.markdown("### Top {}:".format(i+1))
-		st.markdown(tweet)
-	st.markdown("## Top 5 liked tweets")
-	top_5_liked_tweets = select_top_k_liked_tweets(df, k=liked_k, print_result=False)
-	for i, tweet in enumerate(top_5_liked_tweets):
-		st.markdown("### Top {}:".format(i+1))
-		st.markdown(tweet)
+	nlp = spacy.load("en_core_web_lg")
+	st.markdown("## Top {} retweeted tweets".format(retweeted_k))
+
+	top_5_retweeted_tweets, re_counts = select_top_k_retweeted_tweets(df, k=retweeted_k, print_result=False)
+	for i, re_tweet in enumerate(top_5_retweeted_tweets):
+		st.markdown("### Top {} (retweeted counts {}):".format(i+1, re_counts[i]))
+		# st.markdown(tweet)
+		show_sim(re_tweet, key="{}".format(random.randrange(0, 50, 1)), nlp=nlp)
+	st.markdown("## Top {} liked tweets".format(liked_k))
+
+	top_5_liked_tweets, li_counts = select_top_k_liked_tweets(df, k=liked_k, print_result=False)
+	for i, li_tweet in enumerate(top_5_liked_tweets):
+		st.markdown("### Top {} (favorite counts {}):".format(i+1, li_counts[i]))
+		# st.markdown(tweet)
+		show_sim(li_tweet, key="{}".format(random.randrange(100, 150, 1)), nlp=nlp)
 
 
-def app():
+def main():
 	df = read_from_db()
 	activities = ["Exploratory Data Analysis", "Twitter Stream", "Forex Prediction", "Backtesting"]
 	choice = st.sidebar.selectbox("Choose Activity", activities)
@@ -478,7 +483,6 @@ def app():
 
 
 if __name__ == "__main__":
-    
     caching.clear_cache()
     st.empty()
-    app()
+    main()
