@@ -256,7 +256,7 @@ def subjectivity_plot(subjectivity_df):
         x=subjectivity_df, 
         name='subjectivity(0-1)',
         xbins=dict(start=0, end=1.0)), row=2, col=1)
-    
+
     fig.update_layout(
         autosize=False,
         width=800,
@@ -276,7 +276,7 @@ def add_frequency(ax, data):
     ax2.set_ylabel('Frequency [%]')
     ax2.set_ylim(0, 100)
     ax2.grid(None)
-    
+
 def upper_rugplot(data, height=.05, ax=None, **kwargs):
     from matplotlib.collections import LineCollection
     ax = ax or plt.gca()
@@ -310,7 +310,7 @@ def select_top_k_retweeted_tweets(df, k=5, print_result=False):
         # Total tweets
         print('Total tweets this period:', len(df.index))
         print('='*30, "\n")
-        
+
         # Retweets
         print('Mean retweets:', round(tweet_df['retweet_count'].mean(), 2), '\n')
         print('Top 5 retweeted tweets:')
@@ -318,7 +318,7 @@ def select_top_k_retweeted_tweets(df, k=5, print_result=False):
         for i in range(5):
             print("#{}: ".format(i+1), tweet_df['retweet_count'].iloc[i], "\n", tweet_df['tweet'].iloc[i], "\n")
         print('\n')
-    
+
     return top_k_retweeted_tweets, counts
 
 def select_top_k_liked_tweets(df, k=5, print_result=False):
@@ -333,7 +333,7 @@ def select_top_k_liked_tweets(df, k=5, print_result=False):
         # Total tweets
         print('Total tweets this period:', len(df.index))
         print('='*30, "\n")
-        
+
         # Likes
         print('Mean likes:', round(tweet_df['favorite_count'].mean(), 2), '\n')
         print('Top 5 liked tweets:')
@@ -341,7 +341,7 @@ def select_top_k_liked_tweets(df, k=5, print_result=False):
         for i in range(5):
             print("#{}: ".format(i+1), tweet_df['favorite_count'].iloc[i], "\n", tweet_df['tweet'].iloc[i], "\n")
         print('\n')
-        
+
     return top_k_liked_tweets, counts
 
 
@@ -431,6 +431,7 @@ def eda_on_tweet(user_name, tweet_count):
 
 def twitter_stream(df, retweeted_k=5, liked_k=5):
 	nlp = spacy.load("en_core_web_lg")
+	# nlp = en_core_web_lg.load()
 	st.markdown("## Top {} retweeted tweets".format(retweeted_k))
 
 	top_5_retweeted_tweets, re_counts = select_top_k_retweeted_tweets(df, k=retweeted_k, print_result=False)
@@ -479,7 +480,7 @@ def main():
 	if choice == "Twitter Stream":
 		retweeted_k = st.sidebar.slider(r"Select top k retweeted tweets", 0, 10, 1)
 		liked_k = st.sidebar.slider(r"Select top k liked tweets", 0, 10, 1)
-		twitter_stream(df, retweeted_k=retweeted_k, liked_k=liked_k)
+		# twitter_stream(df, retweeted_k=retweeted_k, liked_k=liked_k)
 
 
 
