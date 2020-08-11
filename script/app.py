@@ -8,9 +8,11 @@ import tweepy
 import nltk
 import string
 import re
+import json
 import time
 import random
 import os
+import pathlib
 import spacy
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -430,7 +432,7 @@ def eda_on_tweet(user_name, tweet_count):
 
 
 def twitter_stream(df, retweeted_k=5, liked_k=5):
-	nlp = spacy.load("en_core_web_lg")
+	# nlp = spacy.load("en_core_web_lg")
 	# nlp = en_core_web_lg.load()
 	st.markdown("## Top {} retweeted tweets".format(retweeted_k))
 
@@ -448,41 +450,101 @@ def twitter_stream(df, retweeted_k=5, liked_k=5):
 		show_sim(li_tweet, key="{}".format(random.randrange(100, 150, 1)), nlp=nlp)
 
 
+@st.cache
+def load_forex():
+    url = "https://bloomberg-market-and-financial-news.p.rapidapi.com/market/get-cross-currencies"
+
+    querystring = {"id":"eur%2Cgbp%2Cjpy%2Cusd"}
+
+    headers = {
+        'x-rapidapi-host': "bloomberg-market-and-financial-news.p.rapidapi.com",
+        'x-rapidapi-key': "537b661c9emsh7d187d9ef48a44bp17c786jsnc8b4ab8c52b4"
+        }
+
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    res = json.loads(response.text)
+    result = res.get("result")
+    data = pd.DataFrame(result)
+    return data
+
+
+@st.cache
+def currency_snippets(currency="EURUSD", start_date='2018-07-02', end_date='2018-12-06'):
+    """
+    Reference from https://fxmarketapi.com/documentation
+        "USDAED": "United Arab Emirates Dirham",
+        "USDARS": "Argentine Peso",
+        "AUDUSD": "Australian Dollar",
+        "USDBRL": "Brazilian Real",
+        "BTCUSD": "Bitcoin",
+        "USDCAD": "Canadian Dollar",
+        "USDCHF": "Swiss Franc",
+        "USDCLP": "Chilean Peso",
+        "USDCNY": "Chinese Yuan",
+        "USDCOP": "Colombian Peso",
+        "USDCZK": "Czech Republic Koruna",
+        "USDDKK": "Danish Krone",
+        "EURUSD": "Euro",
+        "GBPUSD": "British Pound Sterling"
+    """
+    URL = "https://fxmarketapi.com/apipandas"
+    params = {
+        'currency' : '{}'.format(currency),
+        'start_date' : '{}'.format(start_date),
+        'end_date':'{}'.format(end_date),
+        'api_key':'SQHMG9v7PRfclvV0iLGA'}
+
+    response = requests.get("https://fxmarketapi.com/apipandas", params=params)
+    df = pd.read_json(response.text)
+    return df
+
+
+def forex_prediction():
+    # data = load_forex()
+    # st.write(data)
+    data = currency_snippets()
+    st.dataframe(data)
+
+
 def main():
-	df = read_from_db()
-	activities = ["Exploratory Data Analysis", "Twitter Stream", "Forex Prediction", "Backtesting"]
-	choice = st.sidebar.selectbox("Choose Activity", activities)
+    df = read_from_db()
+    activities = ["Exploratory Data Analysis", "Twitter Stream", "Forex Prediction", "Backtesting"]
+    choice = st.sidebar.selectbox("Choose Activity", activities)
 
-	if choice == "Exploratory Data Analysis":
-		# Basic info
-		st.sidebar.header("Enter the Details Here!!")
-		user_name = st.sidebar.text_area(r"Enter the Twitter Handle without @")
-		tweet_count = st.sidebar.slider(
-			r"Select the number of Latest Tweets to Analyze", 0, 50, 1)
+    if choice == "Exploratory Data Analysis":
+        # Basic info
+        st.sidebar.header("Enter the Details Here!!")
+        user_name = st.sidebar.text_area(r"Enter the Twitter Handle without @")
+        tweet_count = st.sidebar.slider(
+            r"Select the number of Latest Tweets to Analyze", 0, 50, 1)
 
-		st.sidebar.markdown(
-			"#### Press Ctrl+Enter or Use the Slider to initiate the analysis.")
-		st.sidebar.markdown(
-			"*****************************************************************")
+        st.sidebar.markdown(
+            "#### Press Ctrl+Enter or Use the Slider to initiate the analysis.")
+        st.sidebar.markdown(
+            "*****************************************************************")
 
-		st.markdown("""## Made With ML Incubator """)
-		st.markdown("""# Twitter Sentiment Analysis""")
-		st.write(
-			"This app analyzes the Twitter tweets and returns the most commonly used words, \
-			associated sentiments and the subjectivity score!! Note that Private account or \
-			Protected Tweets will not be accessible through this app.")
-		st.write(
-			":bird: All results are based on the number of Latest Tweets selected on the \
-			Sidebar. :point_left:")
+        st.markdown("""## Made With ML Incubator """)
+        st.markdown("""# Twitter Sentiment Analysis""")
+        st.write(
+            "This app analyzes the Twitter tweets and returns the most commonly used words, \
+            associated sentiments and the subjectivity score!! Note that Private account or \
+            Protected Tweets will not be accessible through this app.")
+        st.write(
+            ":bird: All results are based on the number of Latest Tweets selected on the \
+            Sidebar. :point_left:")
 
-		eda_on_tweet(user_name, tweet_count)
+        eda_on_tweet(user_name, tweet_count)
 
-	if choice == "Twitter Stream":
-		retweeted_k = st.sidebar.slider(r"Select top k retweeted tweets", 0, 10, 1)
-		liked_k = st.sidebar.slider(r"Select top k liked tweets", 0, 10, 1)
-		# twitter_stream(df, retweeted_k=retweeted_k, liked_k=liked_k)
+    if choice == "Twitter Stream":
+        retweeted_k = st.sidebar.slider(r"Select top k retweeted tweets", 0, 10, 1)
+        liked_k = st.sidebar.slider(r"Select top k liked tweets", 0, 10, 1)
+        # twitter_stream(df, retweeted_k=retweeted_k, liked_k=liked_k)
 
+    if choice == "Forex Prediction":
+        forex_prediction()
 
+    if choice == "Backtesting":
+        pass
 
 
 if __name__ == "__main__":
