@@ -135,11 +135,13 @@ def prep_data(tweet):
 
 
 def wordcloud(clean_tweet):
+    stop_words = set(stopwords.words('english'))
 	font_path = "./Scribble Note DEMO.otf"
 	extra_stopwords = ["The", "It", "it", "in", "In", "wh", "yo"]
+    stop_words.update(extra_stopwords)
 	wordcloud_words = " ".join(clean_tweet)
 	wordcloud = WordCloud(
-		stopwords=extra_stopwords, height=300, width=500, 
+		stopwords=stop_words, height=300, width=500, 
 		background_color="white", random_state=100, font_path=font_path
 	).generate(wordcloud_words)
 	plt.imshow(wordcloud, interpolation="bilinear")
