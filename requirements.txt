@@ -80,4 +80,3 @@ webencodings==0.5.1
 widgetsnbextension==3.5.1
 wordcloud==1.7.0
 zipp==3.1.0
-https://download.pytorch.org/whl/cpu/torch-1.5.1%2Bcpu-cp36-cp36m-linux_x86_64.whl
