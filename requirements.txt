@@ -77,3 +77,11 @@ webencodings==0.5.1
 widgetsnbextension==3.5.1
 wordcloud==1.7.0
 zipp==1.2.0
+tweepy
+nltk
+spacy
+seaborn
+plotly
+spacy_streamlit
+beautifulsoup4
+textblob
