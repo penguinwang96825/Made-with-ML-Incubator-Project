@@ -137,7 +137,8 @@ def prep_data(tweet):
 def wordcloud(clean_tweet):
     font_path = "./Scribble Note DEMO.otf"
     extra_stopwords = ["The", "It", "it", "in", "In", "wh", "yo"]
-    STOPWORDS = [STOPWORDS.add(n) for n in extra_stopwords]
+    for n in extra_stopwords:
+        STOPWORDS.add(n)
     wordcloud_words = " ".join(clean_tweet)
     wordcloud = WordCloud(
         stopwords=STOPWORDS, height=300, width=500, 
