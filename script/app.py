@@ -35,6 +35,8 @@ from wordcloud import WordCloud
 from wordcloud import STOPWORDS
 from wordcloud import ImageColorGenerator
 from textblob import TextBlob
+from twitter_stream import TwitterClient
+from twitter_stream import TweetAnalyzer
 
 
 consumer_key = config.CONSUMER_KEY
@@ -49,6 +51,7 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True)
 
 
+@st.cache(persist=True)
 def get_traders_names():
     headers = {
         "User-Agent": 
@@ -62,21 +65,21 @@ def get_traders_names():
         trader = element.find(name="a").text.replace("@", "")
         traders.append(trader)
     return traders
-traders = get_traders_names()
 
 
+@st.cache(persist=True)
 def get_all_trader_twitter():
     traders = get_traders_names()
     api = TwitterClient().get_twitter_client_api()
     tweet_analyzer = TweetAnalyzer()
     df = pd.DataFrame()
-    for trader in tqdm(traders):
+    for i, trader in enumerate(traders):
         try: 
             tweets = api.user_timeline(screen_name=trader, count=100)
             df_trader = tweet_analyzer.tweets_to_dataframe(tweets)
             df = pd.concat([df, df_trader], axis=0)
         except:
-            pass
+            print(f"Can't get {trader} tweets timeline.")
     return df
 
 
@@ -432,7 +435,7 @@ def eda_on_tweet(user_name, tweet_count):
 
 
 def twitter_stream(df, retweeted_k=5, liked_k=5):
-	# nlp = spacy.load("en_core_web_lg")
+	nlp = spacy.load("en_core_web_lg")
 	# nlp = en_core_web_lg.load()
 	st.markdown("## Top {} retweeted tweets".format(retweeted_k))
 
@@ -468,8 +471,8 @@ def load_forex():
     return data
 
 
-@st.cache
-def currency_snippets(currency="EURUSD", start_date='2018-07-02', end_date='2018-12-06'):
+@st.cache(persist=True)
+def currency_snippets(currency, start_date='2018-07-02'):
     """
     Reference from https://fxmarketapi.com/documentation
         "USDAED": "United Arab Emirates Dirham",
@@ -490,8 +493,7 @@ def currency_snippets(currency="EURUSD", start_date='2018-07-02', end_date='2018
     URL = "https://fxmarketapi.com/apipandas"
     params = {
         'currency' : '{}'.format(currency),
-        'start_date' : '{}'.format(start_date),
-        'end_date':'{}'.format(end_date),
+        'start_date' : '{}'.format(start_date), 
         'api_key':'SQHMG9v7PRfclvV0iLGA'}
 
     response = requests.get("https://fxmarketapi.com/apipandas", params=params)
@@ -500,10 +502,11 @@ def currency_snippets(currency="EURUSD", start_date='2018-07-02', end_date='2018
 
 
 def forex_prediction():
-    # data = load_forex()
-    # st.write(data)
-    data = currency_snippets()
-    st.dataframe(data)
+    currency = st.sidebar.selectbox(
+        "Which do you like the most?",
+        ("AUDUSD","BTCUSD","USDCAD", "USDCHF", "USDCNY", "EURUSD", "GBPUSD"))
+    df = currency_snippets(currency=currency, start_date='2018-07-02', end_date='2020-07-02')
+    return df
 
 
 def main():
@@ -538,10 +541,23 @@ def main():
     if choice == "Twitter Stream":
         retweeted_k = st.sidebar.slider(r"Select top k retweeted tweets", 0, 10, 1)
         liked_k = st.sidebar.slider(r"Select top k liked tweets", 0, 10, 1)
-        # twitter_stream(df, retweeted_k=retweeted_k, liked_k=liked_k)
+        status_text = st.empty()
+        insert_into_db()
+        df = read_from_db()
+        status_text.text('Done!')
+        st.balloons()
+        twitter_stream(df, retweeted_k=5, liked_k=5)
 
     if choice == "Forex Prediction":
-        forex_prediction()
+        st.markdown("""## Made With ML Incubator """)
+        st.markdown("""# Twitter Forex Prediction""")
+        currency = st.sidebar.selectbox(
+            "Which do you like the most?",
+            ("AUDUSD","BTCUSD","USDCAD", "USDCHF", "USDCNY", "EURUSD", "GBPUSD"))
+        df = currency_snippets(currency)
+        st.markdown("### Close Price Historical Data Plot")
+        st.line_chart(df.close)
+        
 
     if choice == "Backtesting":
         pass
