@@ -739,7 +739,7 @@ def main():
         retweeted_k = st.sidebar.slider(r"Select top k retweeted tweets", 0, 10, 1)
         liked_k = st.sidebar.slider(r"Select top k liked tweets", 0, 10, 1)
 
-        if st.button('Say hello'):
+        if st.button('Get Twitter Stream'):
         	insert_into_db()
         	df = read_from_db()
         	st.balloons()
