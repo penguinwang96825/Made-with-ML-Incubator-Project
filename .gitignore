@@ -1,6 +1,8 @@
-.ipynb_checkpoints
+.ipynb_checkpoints\
+__pycache__\
 .github
 config.py
 forex.csv
 df_final.gzip
 .env
+.pyc
