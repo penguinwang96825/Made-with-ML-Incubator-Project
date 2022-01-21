@@ -1,5 +1,5 @@
 ipykernel==4.10.1
-ipython==5.10.0
+ipython==7.16.3
 joblib==0.14.1
 matplotlib
 notebook==5.7.10
