@@ -2,7 +2,7 @@ ipykernel==4.10.1
 ipython==5.10.0
 joblib==0.14.1
 matplotlib
-notebook==5.7.10
+notebook==6.4.10
 numpy==1.16.6
 pandas
 pathtools==0.1.2
