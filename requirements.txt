@@ -10,7 +10,7 @@ Pillow==6.2.2
 plotly==4.8.1
 pymongo==3.11.0
 requests==2.24.0
-streamlit==0.64.0
+streamlit==1.11.1
 wordcloud==1.7.0
 zipp==1.2.0
 tweepy==3.9.0
